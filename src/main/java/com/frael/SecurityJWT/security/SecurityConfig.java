@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.core.userdetails.User;
@@ -24,6 +26,8 @@ import com.frael.SecurityJWT.services.UserDetailsServiceImpl;
 //import org.springframework.security.config.Customizer;
 
 @Configuration
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     // Filtro de autenticación
@@ -38,7 +42,8 @@ public class SecurityConfig {
     UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager)
+            throws Exception {
 
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
         // Seteamos el manager de autenticacion
@@ -48,17 +53,26 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> {
                             auth.requestMatchers("/dashboard/modulo1").permitAll();
-                            // TODO: Aplicar la 2da forma
+
                             // Para manejar el acceso por ROLES - 1era Forma
-                            auth.requestMatchers("/api/auth/createUser").hasRole("ADMIN");
+                            /*
+                             * auth.requestMatchers("/api/auth/createUser").hasRole("ADMIN");
+                             * auth.requestMatchers("/api/role/accessAdmin").hasRole("ADMIN");
+                             * auth.requestMatchers("/api/role/accessUser").hasRole("USER");
+                             * auth.requestMatchers("/dashboard/menu2").hasAnyRole("USER", "ADMIN");
+                             */
                             auth.anyRequest().authenticated();
                         })
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
-                //.httpBasic(Customizer.withDefaults())
+                // .httpBasic(Customizer.withDefaults())
                 .addFilter(jwtAuthenticationFilter)
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // Agregamos el filtro de autorización - PONER EL FILTRO CORRECTO -.-
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // Agregamos el
+                                                                                                     // filtro de
+                                                                                                     // autorización -
+                                                                                                     // PONER EL FILTRO
+                                                                                                     // CORRECTO -.-
                 .build();
     }
 
@@ -82,7 +96,6 @@ public class SecurityConfig {
      * }
      */
 
-
     /**
      * Creacion del objeto encargado de la administracion de la autenticacion del
      * usuario
@@ -96,7 +109,7 @@ public class SecurityConfig {
             throws Exception {
 
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-                //.userDetailsService(userDetailService())
+                // .userDetailsService(userDetailService())
                 .userDetailsService(userDetailsServiceImpl)
                 .passwordEncoder(passwordEncoder).and().build();
     }

@@ -17,4 +17,9 @@ public class DashboardController {
     public String dashboard2() {
         return "This method is secured";
     }
+
+    @GetMapping("/menu2")
+    public String menu2() {
+        return "Endpoint accessed by USER or ADMIN";
+    }
 }
