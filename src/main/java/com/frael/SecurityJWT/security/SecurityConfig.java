@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.frael.SecurityJWT.exceptions.CustomAccessDeniedHandler;
 import com.frael.SecurityJWT.security.filters.JwtAuthenticationFilter;
 import com.frael.SecurityJWT.security.filters.JwtAuthorizationFilter;
 import com.frael.SecurityJWT.security.jwt.JwtUtils;
@@ -29,6 +30,10 @@ import com.frael.SecurityJWT.services.UserDetailsServiceImpl;
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    // Manejador de excepciones
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
 
     // Filtro de autenticación
     @Autowired
@@ -50,6 +55,7 @@ public class SecurityConfig {
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
 
         return httpSecurity.csrf(c -> c.disable())
+                .exceptionHandling(excepciones -> excepciones.accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(
                         auth -> {
                             auth.requestMatchers("/dashboard/modulo1").permitAll();
