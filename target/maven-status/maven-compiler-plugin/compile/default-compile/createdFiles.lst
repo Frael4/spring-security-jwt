@@ -1,0 +1,12 @@
+com\frael\SecurityJWT\models\RoleEntity.class
+com\frael\SecurityJWT\security\SecurityConfig.class
+com\frael\SecurityJWT\models\RoleEntity$RoleEntityBuilder.class
+com\frael\SecurityJWT\request\UserDTO$UserDTOBuilder.class
+com\frael\SecurityJWT\controllers\DashboardController.class
+com\frael\SecurityJWT\SecurityJwtApplication.class
+com\frael\SecurityJWT\repository\UserRepository.class
+com\frael\SecurityJWT\controllers\PrincipalController.class
+com\frael\SecurityJWT\request\UserDTO.class
+com\frael\SecurityJWT\models\UserEntity$UserEntityBuilder.class
+com\frael\SecurityJWT\models\ERole.class
+com\frael\SecurityJWT\models\UserEntity.class
